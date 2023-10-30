@@ -103,7 +103,7 @@ function addDepartment() {
     })
     .then(answer => {
         const query = 'INSERT INTO Departments SET ?';
-        connection.query(query, { DepartmentName: answer.departmentName }, (err, res) => {
+        connection.query(query, { name: answer.departmentName }, (err, res) => {
             if (err) throw err;
             console.log('Department added successfully!');
             startApp();
@@ -112,7 +112,6 @@ function addDepartment() {
 }
 
 function addRole() {
-    // Obtener una lista de todos los departamentos
     const queryDepartments = 'SELECT id, name FROM Departments';
     connection.query(queryDepartments, (err, departments) => {
         if (err) throw err;
@@ -164,7 +163,7 @@ function addEmployee() {
     ])
     .then(answer => {
         const query = 'INSERT INTO Employees SET ?';
-        connection.query(query, { FirstName: answer.firstName, LastName: answer.lastName }, (err, res) => {
+        connection.query(query, { first_name: answer.firstName, last_name: answer.lastName }, (err, res) => {
             if (err) throw err;
             console.log('Employee added successfully!');
             startApp();
@@ -175,8 +174,8 @@ function addEmployee() {
 function updateEmployeeRole() {
     let employees;
     let roles;
-    const queryEmployees = 'SELECT EmployeeID, CONCAT(FirstName, " ", LastName) AS EmployeeName FROM Employees';
-    const queryRoles = 'SELECT RoleID, Title FROM Roles';
+    const queryEmployees = 'SELECT id AS EmployeeID, CONCAT(first_name, " ", last_name) AS EmployeeName FROM Employees';
+    const queryRoles = 'SELECT id AS RoleID, title AS Title FROM Roles';
 
     connection.query(queryEmployees, (err, res) => {
         if (err) throw err;
@@ -201,7 +200,7 @@ function updateEmployeeRole() {
                 }
             ])
             .then(answers => {
-                const queryUpdate = 'UPDATE Employees SET RoleID = ? WHERE EmployeeID = ?';
+                const queryUpdate = 'UPDATE Employees SET role_id = ? WHERE id = ?';
                 connection.query(queryUpdate, [answers.newRole, answers.employee], (err, res) => {
                     if (err) throw err;
                     console.log('Employee role updated successfully!');
