@@ -52,6 +52,9 @@ function startApp() {
             case 'Add a role':
                 addRole();
                 break;
+            case 'Add a manager':
+                addManager();
+                break;
             case 'Update an employee role':
                 updateEmployeeRole();
                 break;             
@@ -224,6 +227,29 @@ function updateEmployeeManager() {
                 console.log('Employee manager updated successfully!');
                 startApp();
             });
+        });
+    });
+}
+
+function addManager() {
+    inquirer.prompt([
+        {
+            name: 'firstName',
+            type: 'input',
+            message: 'Enter the manager\'s first name:'
+        },
+        {
+            name: 'lastName',
+            type: 'input',
+            message: 'Enter the manager\'s last name:'
+        }
+    ])
+    .then(answer => {
+        const query = 'INSERT INTO Employees SET ?';
+        connection.query(query, { first_name: answer.firstName, last_name: answer.lastName, is_manager: true }, (err, res) => {
+            if (err) throw err;
+            console.log('Manager added successfully!');
+            startApp();
         });
     });
 }
