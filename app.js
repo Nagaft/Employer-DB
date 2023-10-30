@@ -112,27 +112,42 @@ function addDepartment() {
 }
 
 function addRole() {
-    inquirer.prompt([
-        {
-            name: 'RoleName',
-            type: 'input',
-            message: 'Enter the name of the new Role:'
-        },
-        {
-            name: 'Salary',
-            type: 'input',
-            message: 'Enter the salary for the new Role:'
-        }
-    ])
-    .then(answer => {
-        const query = 'INSERT INTO Roles SET ?';
-        connection.query(query, { Title: answer.RoleName, Salary: answer.Salary }, (err, res) => {
-            if (err) throw err;
-            console.log('Role added successfully!');
-            startApp();
+    // Obtener una lista de todos los departamentos
+    const queryDepartments = 'SELECT id, name FROM Departments';
+    connection.query(queryDepartments, (err, departments) => {
+        if (err) throw err;
+        inquirer.prompt([
+            {
+                name: 'roleName',
+                type: 'input',
+                message: 'Enter the name of the new role:'
+            },
+            {
+                name: 'salary',
+                type: 'input',
+                message: 'Enter the salary for this role:'
+            },
+            {
+                name: 'department',
+                type: 'list',
+                message: 'Select the department for this role:',
+                choices: departments.map(department => ({
+                    name: department.name,
+                    value: department.id
+                }))
+            }
+        ])
+        .then(answer => {
+            const query = 'INSERT INTO Roles SET ?';
+            connection.query(query, { title: answer.roleName, salary: answer.salary, department_id: answer.department }, (err, res) => {
+                if (err) throw err;
+                console.log('Role added successfully!');
+                startApp();
+            });
         });
     });
 }
+
 
 function addEmployee() {
     inquirer.prompt([
