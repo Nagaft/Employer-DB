@@ -1,0 +1,28 @@
+
+CREATE DATABASE IF NOT EXISTS EmployeeDB;
+
+USE EmployeeDB;
+
+
+CREATE TABLE IF NOT EXISTS Departments (
+    DepartmentID INT AUTO_INCREMENT PRIMARY KEY,
+    DepartmentName VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Roles (
+    RoleID INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(255) NOT NULL,
+    Salary DECIMAL NOT NULL,
+    DepartmentID INT,
+    FOREIGN KEY (DepartmentID) REFERENCES Departments(DepartmentID)
+);
+
+CREATE TABLE IF NOT EXISTS Employees (
+    EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(255) NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    RoleID INT,
+    ManagerID INT,
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
+    FOREIGN KEY (ManagerID) REFERENCES Employees(EmployeeID)
+);
